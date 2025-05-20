@@ -4,6 +4,11 @@ import { PDFContext } from "../renderers/pdf/state";
 import { setPDFPaginated, setZoomLevel } from "../renderers/pdf/state/actions";
 
 export const usePDFControls = () => {
+  const pdfContext = useContext(PDFContext);
+  if (!pdfContext) {
+    throw new Error("usePDFControls must be used within a PDFContext");
+  }
+
   const {
     state: {
       mainState,
