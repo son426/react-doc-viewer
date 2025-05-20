@@ -7,3 +7,4 @@ export * from './utils/fileLoaders';
 export { type AvailableLanguages, supportedLanguages } from './i18n';
 export * from './renderers';
 export { usePDFControls } from './hooks/usePDFControls';
+export { DocViewerProvider } from './store/DocViewerProvider';
