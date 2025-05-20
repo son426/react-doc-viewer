@@ -1,9 +1,7 @@
-import React, { FC, useContext } from "react";
+import { FC } from "react";
 import styled from "styled-components";
 import { Button, LinkButton } from "../../../components/common";
 import { IStyledProps } from "../../..";
-import { PDFContext } from "../state";
-import { setPDFPaginated, setZoomLevel } from "../state/actions";
 import { useTranslation } from "../../../hooks/useTranslation";
 import {
   DownloadPDFIcon,
@@ -13,22 +11,21 @@ import {
   ZoomOutPDFIcon,
 } from "./icons";
 import PDFPagination from "./PDFPagination";
+import { usePDFControls } from "../../../hooks/usePDFControls";
 
 const PDFControls: FC = () => {
   const { t } = useTranslation();
   const {
-    state: {
-      mainState,
-      paginated,
-      zoomLevel,
-      numPages,
-      zoomJump,
-      defaultZoomLevel,
-    },
-    dispatch,
-  } = useContext(PDFContext);
-
-  const currentDocument = mainState?.currentDocument || null;
+    currentDocument,
+    zoomLevel,
+    paginated,
+    numPages,
+    defaultZoomLevel,
+    zoomIn,
+    zoomOut,
+    resetZoom,
+    togglePagination,
+  } = usePDFControls();
 
   return (
     <Container id="pdf-controls">
@@ -45,23 +42,17 @@ const PDFControls: FC = () => {
         </DownloadButton>
       )}
 
-      <ControlButton
-        id="pdf-zoom-out"
-        onMouseDown={() => dispatch(setZoomLevel(zoomLevel - zoomJump))}
-      >
+      <ControlButton id="pdf-zoom-out" onMouseDown={zoomOut}>
         <ZoomOutPDFIcon color="#000" size="80%" />
       </ControlButton>
 
-      <ControlButton
-        id="pdf-zoom-in"
-        onMouseDown={() => dispatch(setZoomLevel(zoomLevel + zoomJump))}
-      >
+      <ControlButton id="pdf-zoom-in" onMouseDown={zoomIn}>
         <ZoomInPDFIcon color="#000" size="80%" />
       </ControlButton>
 
       <ControlButton
         id="pdf-zoom-reset"
-        onMouseDown={() => dispatch(setZoomLevel(defaultZoomLevel))}
+        onMouseDown={resetZoom}
         disabled={zoomLevel === defaultZoomLevel}
       >
         <ResetZoomPDFIcon color="#000" size="70%" />
@@ -70,7 +61,7 @@ const PDFControls: FC = () => {
       {numPages > 1 && (
         <ControlButton
           id="pdf-toggle-pagination"
-          onMouseDown={() => dispatch(setPDFPaginated(!paginated))}
+          onMouseDown={togglePagination}
         >
           <TogglePaginationPDFIcon
             color="#000"
